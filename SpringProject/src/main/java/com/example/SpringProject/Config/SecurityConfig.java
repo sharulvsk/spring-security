@@ -39,14 +39,16 @@ public class SecurityConfig{
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf->csrf.disable())
-		.authorizeHttpRequests(auth->auth.anyRequest().authenticated())
+		.authorizeHttpRequests(auth->auth.requestMatchers("/rest/**").hasAnyRole("ADMIN","USERS")
+				.anyRequest().authenticated())
 		.httpBasic(Customizer.withDefaults());
 		return http.build();
 	}
 	@Bean
 	public UserDetailsService userDetailsService() {
-		UserDetails user=User.withUsername("Priya").password("password").roles("admin").build();
-		return new InMemoryUserDetailsManager(user);
+		UserDetails user1=User.withUsername("Priya").password("password").roles("ADMIN").build();
+		UserDetails user2=User.withUsername("Arul").password("12345678").roles("USERS").build();
+		return new InMemoryUserDetailsManager(user1,user2);
 	}
 	@Bean
 	public static PasswordEncoder passwordEncoder() {
