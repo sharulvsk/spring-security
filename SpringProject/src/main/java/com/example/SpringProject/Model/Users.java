@@ -1,7 +1,13 @@
 package com.example.SpringProject.Model;
+import java.util.Set;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Table(name="Users")
@@ -10,11 +16,13 @@ public class Users {
 	private int uid;
 	private String username;
 	private String password;
-	private String role;
+	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@JoinTable(name="user_role",joinColumns=@JoinColumn(name="uid"),inverseJoinColumns=@JoinColumn(name="rid"))
+	private Set<Role> role;
 	
 	public Users() {
 	}
-	public Users(int uid, String username, String password, String role) {
+	public Users(int uid, String username, String password, Set<Role> role) {
 		this.uid = uid;
 		this.username = username;
 		this.password = password;
@@ -38,10 +46,10 @@ public class Users {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getRole() {
+	public Set<Role> getRole() {
 		return role;
 	}
-	public void setRole(String role) {
+	public void setRole(Set<Role> role) {
 		this.role = role;
 	}
 	
